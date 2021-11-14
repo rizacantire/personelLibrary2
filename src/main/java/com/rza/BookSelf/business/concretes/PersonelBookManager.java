@@ -31,16 +31,24 @@ public class PersonelBookManager implements PersonelBookService {
 
     @Override
     public boolean update(PersonelBook entity) {
-        return false;
+        this.personelBookDao.save(entity);
+        return true;
+
     }
 
     @Override
     public void delete(PersonelBook entity) {
-
+        this.personelBookDao.delete(entity);
     }
 
     @Override
     public boolean deleteById(int id) {
-        return false;
+        this.personelBookDao.deleteById(id);
+        return true;
+    }
+
+    @Override
+    public PersonelBook getById(int id) {
+        return this.personelBookDao.getById(id);
     }
 }

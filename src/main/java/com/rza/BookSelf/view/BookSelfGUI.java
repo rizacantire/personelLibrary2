@@ -489,6 +489,33 @@ public class BookSelfGUI extends JFrame {
 
             }
         });
+        btn_book_self_book_delete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                var bookId = Integer.parseInt(lbl_selected_book_id.getText());
+                if(Helper.confirm("sure")){
+                    personelBookService.deleteById(bookId);
+                    loadBookSelf();
+                }
+            }
+        });
+        okunduOkunmadıButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                var bookId = Integer.parseInt(lbl_selected_book_id.getText());
+                PersonelBook pb = new PersonelBook();
+                var pbb = personelBookService.getById(bookId);
+                pb.setId(bookId);
+                if (pbb.isExist()){
+                    pb.setExist(false);
+                }else {
+                    pb.setExist(true);
+                }
+                personelBookService.add(pb);
+                loadBookSelf();
+
+            }
+        });
     }
 
     private void loadFavoriteBooks() {
