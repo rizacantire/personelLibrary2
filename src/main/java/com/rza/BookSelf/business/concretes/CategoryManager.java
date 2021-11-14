@@ -45,6 +45,7 @@ public class CategoryManager implements CategoryService {
 
         this.categoryDao.delete(entity);
     }
+
     @Override
     public boolean deleteById(int id) {
 

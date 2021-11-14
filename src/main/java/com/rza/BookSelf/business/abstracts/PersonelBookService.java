@@ -4,5 +4,6 @@ import com.rza.BookSelf.entities.concretes.PersonelBook;
 
 public interface PersonelBookService extends EntityService<PersonelBook> {
     PersonelBook getById(int id);
+
     PersonelBook getByBookId(int id);
 }

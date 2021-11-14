@@ -27,7 +27,7 @@ public class Helper {
         }
     }
 
-    public static void layout(){
+    public static void layout() {
         try {
             UIManager.setLookAndFeel("Nimbus");
         } catch (ClassNotFoundException e) {
@@ -61,8 +61,8 @@ public class Helper {
 
     public static boolean fieldIsEmpty(JTextField... textField) {
         boolean result = true;
-        for(var field:textField){
-            result =  field.getText().trim().isEmpty();
+        for (var field : textField) {
+            result = field.getText().trim().isEmpty();
         }
         return result;
     }
@@ -78,8 +78,8 @@ public class Helper {
         }
     }
 
-    public static void tableEditHeader(JTable tbl,int... columns) {
-        for (var c : columns){
+    public static void tableEditHeader(JTable tbl, int... columns) {
+        for (var c : columns) {
             tbl.getColumnModel().getColumn(c).setMaxWidth(40);
         }
         tbl.getTableHeader().setReorderingAllowed(false);

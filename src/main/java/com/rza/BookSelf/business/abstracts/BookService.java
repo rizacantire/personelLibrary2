@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface BookService extends EntityService<Book> {
     List<Book> getBookByCategory(List<Category> categoryName);
+
     List<Book> getByAuthor(Author author);
 }

@@ -53,15 +53,15 @@ public class AuthorManager implements AuthorService {
     @Override
     public boolean isAuthorExist(Author author) {
         var result = this.authorDao.findByFirstNameAndLastName(author.getFirstName(), author.getLastName());
-        if (result==null){
+        if (result == null) {
             return true;
-        }else {
+        } else {
             return false;
         }
     }
 
     @Override
-    public Author findByAuthorName(String authorName,String authorLastName) {
-        return this.authorDao.findByFirstNameAndLastName(authorName,authorLastName);
+    public Author findByAuthorName(String authorName, String authorLastName) {
+        return this.authorDao.findByFirstNameAndLastName(authorName, authorLastName);
     }
 }

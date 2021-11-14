@@ -25,7 +25,7 @@ public class Item {
         this.value = value;
     }
 
-    public String toString(){
+    public String toString() {
         return this.value;
     }
 }
