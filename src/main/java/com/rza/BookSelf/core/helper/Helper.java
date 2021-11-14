@@ -78,8 +78,10 @@ public class Helper {
         }
     }
 
-    public static void tableEditHeader(JTable tbl) {
-        tbl.getColumnModel().getColumn(0).setMaxWidth(40);
+    public static void tableEditHeader(JTable tbl,int... columns) {
+        for (var c : columns){
+            tbl.getColumnModel().getColumn(c).setMaxWidth(40);
+        }
         tbl.getTableHeader().setReorderingAllowed(false);
     }
 

@@ -5,25 +5,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class PersonelBook {
+public class FavoriteBook {
+
     @Id
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_Sequence")
     @SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
     private int id;
 
-    @ManyToOne
-    private Book book;
-
-    private boolean isRead;
-
-    private boolean isExist;
-
-    @ManyToOne
-    private FavoriteBook favoriteBook;
+    @OneToMany
+    private List<PersonelBook> personelBooks;
 }
