@@ -10,14 +10,12 @@ import org.springframework.stereotype.Component;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellEditor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Component
 public class BookSelfGUI extends JFrame {
@@ -37,8 +35,8 @@ public class BookSelfGUI extends JFrame {
     private JPanel pnl_menu;
     private JPanel pnl_book_list;
     private JButton btn_add_favorite;
-    private JButton okunduOkunmadıButton;
-    private JButton varYokButton;
+    private JButton btn_read;
+    private JButton btn_exist;
     private Object[] col_books;
     private Object[] row_books;
     private DefaultTableModel mdl_books;
@@ -98,6 +96,7 @@ public class BookSelfGUI extends JFrame {
     private JPanel pnl_favorite_books;
     private JTable tbl_favorite_book;
     private JButton btn_delete_favorite;
+    private JLabel lbl_selected_favorite_book;
     private Object[] col_category;
     private Object[] row_category;
     private DefaultTableModel mdl_category;
@@ -131,9 +130,8 @@ public class BookSelfGUI extends JFrame {
 
         tbl_book_list.getColumnModel().getColumn(5).setMaxWidth(200);
         tableColumnAlignment(tbl_book_list,1,4);
-        tbl_book_list.getColumnModel().getColumn(0).setMinWidth(0);
-        tbl_book_list.getColumnModel().getColumn(0).setMaxWidth(0);
-        tbl_book_list.getColumnModel().getColumn(0).setWidth(0);
+
+        hideTableHeader(tbl_book_list,0);
 
 
         Helper.tableEditHeader(tbl_book_list,0,1);
@@ -143,12 +141,17 @@ public class BookSelfGUI extends JFrame {
         //Kütüphane
 
         //Kitaplık
-        col_book_self = new Object[]{"Id", "Yazar", "Kitap Adı", "Sayfa", "Kategori", "Okundu mu?", "Mevcut mu?"};
+        col_book_self = new Object[]{"Id","Sayı", "Yazar", "Kitap Adı", "Sayfa", "Kategori", "Okundu mu?", "Mevcut mu?"};
         mdl_book_self = new DefaultTableModel();
         mdl_book_self.setColumnIdentifiers(col_book_self);
         row_book_self = new Object[col_book_self.length];
         tbl_book_self.setModel(mdl_book_self);
-        Helper.tableEditHeader(tbl_book_self);
+        Helper.tableEditHeader(tbl_book_self,1,4);
+        tbl_book_self.getColumnModel().getColumn(6).setMaxWidth(80);
+        tbl_book_self.getColumnModel().getColumn(7).setMaxWidth(80);
+        hideTableHeader(tbl_book_self,0);
+        tableColumnAlignment(tbl_book_self,1,4,5,6,7);
+
         loadBookSelf();
 
         //Kitaplık
@@ -160,6 +163,9 @@ public class BookSelfGUI extends JFrame {
         row_author = new Object[col_author.length];
         tbl_author_list.setModel(mdl_author);
         Helper.tableEditHeader(tbl_author_list);
+
+        hideTableHeader(tbl_author_list,0);
+        tableColumnAlignment(tbl_author_list,1,2);
         loadAuthors();
         //Yazar
 
@@ -170,6 +176,8 @@ public class BookSelfGUI extends JFrame {
         row_category = new Object[col_category.length];
         tbl_categories.setModel(mdl_category);
         Helper.tableEditHeader(tbl_categories);
+        hideTableHeader(tbl_categories,0);
+        tableColumnAlignment(tbl_categories,1);
         loadCategories();
 
         //Category
@@ -180,8 +188,14 @@ public class BookSelfGUI extends JFrame {
         mdl_favorite = new DefaultTableModel();
         mdl_favorite.setColumnIdentifiers(col_favorite);
         row_favorite = new Object[col_favorite.length];
+
         tbl_favorite_book.setModel(mdl_favorite);
+        hideTableHeader(tbl_favorite_book,0);
+        Helper.tableEditHeader(tbl_favorite_book,1,4);
+        tableColumnAlignment(tbl_favorite_book,1,4);
+
         loadFavoriteBooks();
+
         //Favorite Book
 
         btn_author_add.addActionListener(new ActionListener() {
@@ -429,8 +443,6 @@ public class BookSelfGUI extends JFrame {
                 book.setCategories(categories);
                 book.setAuthors(authors);
 
-
-
                 if (Helper.confirm("sure")){
                     bookService.update(book);
                     loadBooks();
@@ -448,19 +460,25 @@ public class BookSelfGUI extends JFrame {
                 var isRead= chck_is_read.isSelected();
                 var isExist = chck_is_exist.isSelected();
                 var bookId = Integer.parseInt(lbl_book_id.getText());
+                var b = personelBookService.getByBookId(bookId);
+
                 PersonelBook pb = new PersonelBook();
                 Book book = new Book();
                 book.setId(bookId);
                 pb.setBook(book);
                 pb.setExist(isExist);
                 pb.setRead(isRead);
-                if (Helper.confirm("sure")){
-                    personelBookService.add(pb);
-                    loadBookSelf();
-                    clearComboBox(cmb_categories,cmb_authors);
-                    Helper.blankField(fld_book_name,fld_book_page);
-                    lbl_book_id.setText("");
-                    clearCheckBox(chck_is_exist,chck_is_read);
+                if (b==null){
+                    if (Helper.confirm("sure")){
+                        personelBookService.add(pb);
+                        loadBookSelf();
+                        clearComboBox(cmb_categories,cmb_authors);
+                        Helper.blankField(fld_book_name,fld_book_page);
+                        lbl_book_id.setText("");
+                        clearCheckBox(chck_is_exist,chck_is_read);
+                    }
+                }else {
+                    Helper.showMsg("Kitaplıkta mevcut");
                 }
             }
         });
@@ -482,10 +500,20 @@ public class BookSelfGUI extends JFrame {
                 PersonelBook pb = new PersonelBook();
                 List<PersonelBook> personelBooks = new ArrayList<>();
                 pb.setId(personelBookId);
-                personelBooks.add(pb);
-                fb.setPersonelBooks(personelBooks);
-                favoriteBookService.add(fb);
-                loadFavoriteBooks();
+                var exist = favoriteBookService.getByPersonelBook(pb);
+                if (exist==null){
+                    if (Helper.confirm("sure")){
+                        personelBooks.add(pb);
+                        fb.setPersonelBooks(personelBooks);
+                        favoriteBookService.add(fb);
+                        loadFavoriteBooks();
+                    }
+                }else {
+                    Helper.showMsg("Kitap Beğinelenlerde Mevcut");
+                }
+                lbl_selected_book_name.setText("");
+                lbl_selected_book_id.setText("");
+
 
             }
         });
@@ -499,23 +527,78 @@ public class BookSelfGUI extends JFrame {
                 }
             }
         });
-        okunduOkunmadıButton.addActionListener(new ActionListener() {
+        btn_read.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 var pbId = Integer.parseInt(lbl_selected_book_id.getText());
                 PersonelBook pb = new PersonelBook();
+
                 var pbb = personelBookService.getById(pbId);
                 pb.setId(pbId);
-                if (pbb.isExist()){
-                    pb.setExist(false);
+
+                pb.setBook(pbb.getBook());
+                if (pbb.isRead()){
+                    pb.setRead(false);
+                    Helper.showMsg("Okunmadı");
+
                 }else {
-                    pb.setExist(true);
+                    pb.setRead(true);
+                    Helper.showMsg("Okundu");
+                }
+                lbl_selected_book_id.setText("");
+                lbl_selected_book_name.setText("");
+                personelBookService.update(pb);
+                loadBookSelf();
+
+            }
+        });
+        btn_exist.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                var pbId = Integer.parseInt(lbl_selected_book_id.getText());
+                PersonelBook pb = new PersonelBook();
+
+                var pbb = personelBookService.getById(pbId);
+                pb.setId(pbId);
+
+                pb.setBook(pbb.getBook());
+                if (Helper.confirm("sure")){
+                    if (pbb.isExist()){
+                        pb.setExist(false);
+                        Helper.showMsg("Mevcut Değil");
+                    }else {
+                        pb.setExist(true);
+                        Helper.showMsg("Mevcut");
+                    }
                 }
                 personelBookService.update(pb);
                 loadBookSelf();
 
             }
         });
+        btn_delete_favorite.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                var fbId = Integer.parseInt(lbl_selected_favorite_book.getText());
+                favoriteBookService.deleteById(fbId);
+                lbl_selected_favorite_book.setText("");
+                loadFavoriteBooks();
+            }
+        });
+        tbl_favorite_book.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                var fbId = tbl_favorite_book.getValueAt(tbl_favorite_book.getSelectedRow(),0).toString();
+                lbl_selected_favorite_book.setText(fbId);
+
+            }
+        });
+    }
+
+    private void hideTableHeader(JTable table,int column) {
+        table.getColumnModel().getColumn(column).setMinWidth(0);
+        table.getColumnModel().getColumn(column).setMaxWidth(0);
+        table.getColumnModel().getColumn(column).setWidth(0);
     }
 
     private void loadFavoriteBooks() {
@@ -622,9 +705,11 @@ public class BookSelfGUI extends JFrame {
     private void loadBookSelf() {
         clearTable(tbl_book_self);
         personelBooks = personelBookService.getAlll();
+        int count = 1;
         for (var book : personelBooks) {
             int i = 0;
             row_book_self[i++] = book.getId();
+            row_book_self[i++] = count++;
             var authors = book.getBook().getAuthors();
             for (var author : authors) {
                 row_book_self[i++] = author.getFirstName() + " " + author.getLastName();

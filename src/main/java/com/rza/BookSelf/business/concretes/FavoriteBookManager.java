@@ -3,6 +3,7 @@ package com.rza.BookSelf.business.concretes;
 import com.rza.BookSelf.business.abstracts.FavoriteBookService;
 import com.rza.BookSelf.dataAccess.FavoriteBookDao;
 import com.rza.BookSelf.entities.concretes.FavoriteBook;
+import com.rza.BookSelf.entities.concretes.PersonelBook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,5 +45,10 @@ public class FavoriteBookManager implements FavoriteBookService {
     public boolean deleteById(int id) {
         this.favoriteBookDao.deleteById(id);
         return true;
+    }
+
+    @Override
+    public FavoriteBook getByPersonelBook(PersonelBook personelBook) {
+        return this.favoriteBookDao.getFavoriteBookByPersonelBooks(personelBook);
     }
 }

@@ -51,4 +51,9 @@ public class PersonelBookManager implements PersonelBookService {
     public PersonelBook getById(int id) {
         return this.personelBookDao.getById(id);
     }
+
+    @Override
+    public PersonelBook getByBookId(int id) {
+        return this.personelBookDao.getPersonelBookByBook_Id(id);
+    }
 }
