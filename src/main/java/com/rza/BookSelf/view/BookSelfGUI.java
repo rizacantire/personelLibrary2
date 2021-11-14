@@ -502,16 +502,16 @@ public class BookSelfGUI extends JFrame {
         okunduOkunmadıButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                var bookId = Integer.parseInt(lbl_selected_book_id.getText());
+                var pbId = Integer.parseInt(lbl_selected_book_id.getText());
                 PersonelBook pb = new PersonelBook();
-                var pbb = personelBookService.getById(bookId);
-                pb.setId(bookId);
+                var pbb = personelBookService.getById(pbId);
+                pb.setId(pbId);
                 if (pbb.isExist()){
                     pb.setExist(false);
                 }else {
                     pb.setExist(true);
                 }
-                personelBookService.add(pb);
+                personelBookService.update(pb);
                 loadBookSelf();
 
             }
