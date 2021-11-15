@@ -10,8 +10,14 @@ import java.util.List;
 public interface BookDao extends JpaRepository<Book, Integer> {
     List<Book> findBookByName(String name);
 
+    List<Book> findBookByNameContains(String name);
+
     List<Book> findBooksByCategoriesIn(List<Category> categoryName);
 
     List<Book> getBookByAuthors(Author author);
+
+    List<Book> findByCategories(Category category);
+
+    List<Book> findBookByAuthorsAndCategories(Author author,Category category);
 
 }

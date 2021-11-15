@@ -73,4 +73,19 @@ public class BookManager implements BookService {
     public List<Book> getByAuthor(Author author) {
         return this.bookDao.getBookByAuthors(author);
     }
+
+    @Override
+    public List<Book> getByCategory(Category category) {
+        return this.bookDao.findByCategories(category);
+    }
+
+    @Override
+    public List<Book> findBookByAuthorsAndCategories(Author author, Category category) {
+        return this.bookDao.findBookByAuthorsAndCategories(author,category);
+    }
+
+    @Override
+    public List<Book> findByName(String bookName) {
+        return this.bookDao.findBookByNameContains(bookName);
+    }
 }

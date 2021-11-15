@@ -7,4 +7,6 @@ public interface AuthorService extends EntityService<Author> {
 
     Author findByAuthorName(String authorName, String authorLastName);
 
+    Author findById(int id);
+
 }

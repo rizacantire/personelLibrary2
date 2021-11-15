@@ -33,4 +33,7 @@ public class Book {
     @OneToMany
     private List<PersonelBook> personelBooks;
 
+    @ManyToOne
+    private ShopList shopList;
+
 }

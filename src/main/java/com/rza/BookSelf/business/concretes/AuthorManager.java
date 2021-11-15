@@ -64,4 +64,9 @@ public class AuthorManager implements AuthorService {
     public Author findByAuthorName(String authorName, String authorLastName) {
         return this.authorDao.findByFirstNameAndLastName(authorName, authorLastName);
     }
+
+    @Override
+    public Author findById(int id) {
+        return this.authorDao.findById(id);
+    }
 }

@@ -98,6 +98,13 @@ public class BookSelfGUI extends JFrame {
     private JButton btn_delete_favorite;
     private JLabel lbl_selected_favorite_book;
     private JButton btn_update_all_table;
+    private JPanel pnl_filter;
+    private JComboBox cmb_filter_author;
+    private JComboBox cmb_filter_category;
+    private JButton btn_filter;
+    private JPanel pnl_search;
+    private JTextField fld_search_text;
+    private JButton btn_search;
     private Object[] col_category;
     private Object[] row_category;
     private DefaultTableModel mdl_category;
@@ -300,7 +307,6 @@ public class BookSelfGUI extends JFrame {
                 List<Category> categoriesDelete = new ArrayList<>();
                 categoriesDelete.add(category);
                 var books = bookService.getBookByCategory(categoriesDelete);
-                System.out.println(books.size());
                 if (books.size() > 0) {
                     if(Helper.confirm("sure")){
                         var c = new Category();
@@ -624,6 +630,84 @@ public class BookSelfGUI extends JFrame {
                 loadAllTable();
             }
         });
+        btn_filter.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                var autohorId = ((Item)cmb_filter_author.getSelectedItem()).getKey();
+                var author = authorService.findById(autohorId);
+                var categoryId = ((Item)cmb_filter_category.getSelectedItem()).getKey();
+                Category category = new Category();
+                category.setId(categoryId);
+
+                if (categoryId>0 && autohorId>0){
+                    var list = bookService.findBookByAuthorsAndCategories(author,category);
+                    loadSampleTable(tbl_book_list,row_books,mdl_books,list);
+                }else if (autohorId>0){
+                    loadFilterAuthor(author);
+                }else if (categoryId>0){
+
+                    var list = bookService.getByCategory(category);
+                    loadSampleTable(tbl_book_list,row_books,mdl_books,list);
+                }else {
+
+                }
+
+            }
+        });
+        btn_search.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                var searchText = fld_search_text.getText();
+
+                if (searchText.length()>2){
+                    var list = bookService.findByName(searchText);
+                    loadSampleTable(tbl_book_list,row_books,mdl_books,list);
+                }else {
+                    Helper.showMsg("En az 3 harf giriniz...");
+                }
+
+            }
+        });
+    }
+
+
+    private void loadSampleTable(JTable table,Object[] rows,DefaultTableModel tableModel,List<Book> list){
+        clearTable(table);
+        int count = 1;
+        for (var book : list) {
+            int i = 0;
+            rows[i++] = book.getId();
+            rows[i++] = count++;
+            var authors = book.getAuthors();
+            for (var a : authors) {
+                rows[i++] = a.getFirstName() + " " + a.getLastName();
+            }
+            rows[i++] = book.getName();
+            rows[i++] = book.getPage();
+            rows[i++] = book.getCategories().get(0).getName();
+            tableModel.addRow(rows);
+        }
+    }
+
+    private void loadFilterAuthor(Author author) {
+        clearTable(tbl_book_list);
+        var list = this.bookService.getByAuthor(author);
+        int count = 1;
+        for (var book : list) {
+            int i = 0;
+            row_books[i++] = book.getId();
+            row_books[i++] = count++;
+            var authors = book.getAuthors();
+            for (var a : authors) {
+                row_books[i++] = a.getFirstName() + " " + a.getLastName();
+            }
+            row_books[i++] = book.getName();
+            row_books[i++] = book.getPage();
+            row_books[i++] = book.getCategories().get(0).getName();
+            mdl_books.addRow(row_books);
+        }
+
+
     }
 
     private void hideTableHeader(JTable table, int column) {
@@ -688,8 +772,11 @@ public class BookSelfGUI extends JFrame {
         var categories = categoryService.getAlll();
         cmb_categories.removeAllItems();
         cmb_categories.addItem(new Item(0, ""));
+        cmb_filter_category.removeAllItems();
+        cmb_filter_category.addItem(new Item(0, ""));
         for (var c : categories) {
             cmb_categories.addItem(new Item(c.getId(), c.getName()));
+            cmb_filter_category.addItem(new Item(c.getId(), c.getName()));
         }
 
     }
@@ -697,8 +784,11 @@ public class BookSelfGUI extends JFrame {
     private void loadAuthorCombo() {
         cmb_authors.removeAllItems();
         cmb_authors.addItem(new Item(0, ""));
+        cmb_filter_author.removeAllItems();
+        cmb_filter_author.addItem(new Item(0, ""));
         for (var a : this.authors) {
             cmb_authors.addItem(new Item(a.getId(), (a.getFirstName() + " " + a.getLastName())));
+            cmb_filter_author.addItem(new Item(a.getId(), (a.getFirstName() + " " + a.getLastName())));
         }
     }
 
