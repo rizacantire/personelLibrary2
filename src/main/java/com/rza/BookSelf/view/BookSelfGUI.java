@@ -105,6 +105,10 @@ public class BookSelfGUI extends JFrame {
     private JPanel pnl_search;
     private JTextField fld_search_text;
     private JButton btn_search;
+    private JPanel pnl_shop_list;
+    private JTable tbl_shop_list;
+    private JButton kitaplığaEkleButton;
+    private JLabel lbl_shop_book_id;
     private Object[] col_category;
     private Object[] row_category;
     private DefaultTableModel mdl_category;
@@ -119,13 +123,22 @@ public class BookSelfGUI extends JFrame {
 
     //Favorite Book
 
+    //Shop List
+    private ShopListService shopListService;
+    private Object[] col_shops;
+    private Object[] row_shops;
+    private DefaultTableModel mdl_shops;
+    private List<ShopList> shopLists;
+    //Shop List
+
     public BookSelfGUI(BookService bookService, PersonelBookService personelBookService, AuthorService authorService,
-                       CategoryService categoryService, FavoriteBookService favoriteBookService) {
+                       CategoryService categoryService, FavoriteBookService favoriteBookService,ShopListService shopListService) {
         this.bookService = bookService;
         this.personelBookService = personelBookService;
         this.authorService = authorService;
         this.categoryService = categoryService;
         this.favoriteBookService = favoriteBookService;
+        this.shopListService = shopListService;
         loadGUI();
 
         //Kütüphane
@@ -147,6 +160,25 @@ public class BookSelfGUI extends JFrame {
         loadBooks();
 
         //Kütüphane
+        //Shop List
+        col_shops = new Object[]{"Id", "Sayı", "Yazar", "Kitap Adı", "Sayfa", "Kategori"};
+        mdl_shops = new DefaultTableModel();
+        mdl_shops.setColumnIdentifiers(col_shops);
+        row_shops = new Object[col_shops.length];
+        tbl_shop_list.setModel(mdl_shops);
+        tbl_shop_list.getColumnModel().getColumn(4).setMaxWidth(50);
+
+        tbl_shop_list.getColumnModel().getColumn(5).setMaxWidth(200);
+        tableColumnAlignment(tbl_shop_list, 1, 4);
+
+        hideTableHeader(tbl_shop_list, 0);
+
+
+        Helper.tableEditHeader(tbl_shop_list, 0, 1);
+
+
+        loadShopListBook();
+        //Shop List
 
         //Kitaplık
         col_book_self = new Object[]{"Id", "Sayı", "Yazar", "Kitap Adı", "Sayfa", "Kategori", "Okundu mu?", "Mevcut mu?"};
@@ -668,6 +700,17 @@ public class BookSelfGUI extends JFrame {
 
             }
         });
+    }
+
+    private void loadShopListBook() {
+        var shopList = shopListService.getAlll();
+        var books = shopList.get(0).getBooks();
+        List<Book> b1 = new ArrayList<>();
+
+        for (var s : shopList){
+            b1 = s.getBooks();
+        }
+        loadSampleTable(tbl_shop_list,row_shops,mdl_shops,b1);
     }
 
 
