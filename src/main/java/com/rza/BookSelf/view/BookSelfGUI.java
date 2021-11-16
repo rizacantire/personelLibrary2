@@ -112,6 +112,7 @@ public class BookSelfGUI extends JFrame {
     private JButton btn_add_shop_list;
     private JButton btn_delete_shop_list;
     private JLabel lbl_delete_shop_book_id;
+    private JButton btn_filter_book_self;
     private Object[] col_category;
     private Object[] row_category;
     private DefaultTableModel mdl_category;
@@ -123,6 +124,7 @@ public class BookSelfGUI extends JFrame {
     private Object[] row_favorite;
     private DefaultTableModel mdl_favorite;
     private List<FavoriteBook> favoriteBooks;
+    private int changeCount = 0;
 
     //Favorite Book
 
@@ -176,11 +178,8 @@ public class BookSelfGUI extends JFrame {
 
         hideTableHeader(tbl_shop_list, 0);
         hideTableHeader(tbl_shop_list, 6);
-        //hideTableHeader(tbl_shop_list,6);
-
 
         Helper.tableEditHeader(tbl_shop_list, 0, 1);
-
 
         loadShopList();
         //Shop List
@@ -554,7 +553,7 @@ public class BookSelfGUI extends JFrame {
             @Override
             public void mousePressed(MouseEvent e) {
 
-                var selected_book_name = tbl_book_self.getValueAt(tbl_book_self.getSelectedRow(), 2).toString();
+                var selected_book_name = tbl_book_self.getValueAt(tbl_book_self.getSelectedRow(), 3).toString();
                 var selected_book_id = tbl_book_self.getValueAt(tbl_book_self.getSelectedRow(), 0).toString();
                 lbl_selected_book_id.setText(selected_book_id);
                 lbl_selected_book_name.setText(selected_book_name);
@@ -749,6 +748,66 @@ public class BookSelfGUI extends JFrame {
                 loadShopList();
             }
         });
+        kitaplığaEkleButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                var deleteShopList = Integer.parseInt(lbl_delete_shop_book_id.getText());
+                var addBook = Integer.parseInt(lbl_shop_book_id.getText());
+                shopListService.deleteById(deleteShopList);
+                PersonelBook personelBook = new PersonelBook();
+                Book book = new Book();
+                book.setId(addBook);
+                personelBook.setBook(book);
+                personelBook.setExist(true);
+                personelBookService.add(personelBook);
+                loadBookSelf();
+                loadShopList();
+
+
+            }
+        });
+        btn_filter_book_self.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+                if (changeCount==0){
+                    loadFilterBookSelf();
+                    changeCount++;
+                }else {
+                    loadBookSelf();
+                    changeCount=0;
+                }
+            }
+        });
+    }
+
+    private void loadFilterBookSelf() {
+        clearTable(tbl_book_self);
+        personelBooks = personelBookService.getAlll();
+        List<PersonelBook> filterList = new ArrayList<>();
+
+        for (var filter : personelBooks){
+            if (filter.isExist()){
+                filterList.add(filter);
+            }
+        }
+        int count = 1;
+        for (var book : filterList) {
+            int i = 0;
+            row_book_self[i++] = book.getId();
+            row_book_self[i++] = count++;
+            var authors = book.getBook().getAuthors();
+            for (var author : authors) {
+                row_book_self[i++] = author.getFirstName() + " " + author.getLastName();
+            }
+            row_book_self[i++] = book.getBook().getName();
+            row_book_self[i++] = book.getBook().getPage();
+            row_book_self[i++] = book.getBook().getCategories().get(0).getName();
+            row_book_self[i++] = book.isRead() ? "Evet" : "Hayır";
+            row_book_self[i++] = book.isExist() ? "Evet" : "Hayır";
+            mdl_book_self.addRow(row_book_self);
+        }
     }
 
     private void loadShopList(){

@@ -190,6 +190,7 @@
                     </constraints>
                     <properties>
                       <text value="Id"/>
+                      <visible value="false"/>
                     </properties>
                   </component>
                   <component id="4c690" class="javax.swing.JLabel">
@@ -321,7 +322,7 @@
               </grid>
             </children>
           </grid>
-          <grid id="1bcda" binding="pnl_book_self" layout-manager="GridLayoutManager" row-count="7" column-count="7" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+          <grid id="1bcda" binding="pnl_book_self" layout-manager="GridLayoutManager" row-count="9" column-count="7" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
               <tabbedpane title="Kitaplık"/>
@@ -339,7 +340,7 @@
               </component>
               <component id="fa48e" class="javax.swing.JButton" binding="btn_read">
                 <constraints>
-                  <grid row="1" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <grid row="2" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <text value="Okundu / Okunmadı"/>
@@ -347,7 +348,7 @@
               </component>
               <component id="16360" class="javax.swing.JButton" binding="btn_exist">
                 <constraints>
-                  <grid row="2" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <grid row="3" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <text value="Var / Yok"/>
@@ -355,7 +356,7 @@
               </component>
               <vspacer id="dfd02">
                 <constraints>
-                  <grid row="6" column="6" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                  <grid row="8" column="6" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                 </constraints>
               </vspacer>
               <hspacer id="a8166">
@@ -370,7 +371,7 @@
               </hspacer>
               <scrollpane id="f0fd">
                 <constraints>
-                  <grid row="1" column="0" row-span="6" col-span="6" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                  <grid row="1" column="0" row-span="8" col-span="6" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties/>
                 <border type="none"/>
@@ -391,7 +392,7 @@
               </component>
               <component id="2cdd1" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="3" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="4" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <text value="Seçilen Kitap"/>
@@ -399,7 +400,7 @@
               </component>
               <component id="a9161" class="javax.swing.JLabel" binding="lbl_selected_book_name">
                 <constraints>
-                  <grid row="4" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="5" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <text value=""/>
@@ -407,10 +408,19 @@
               </component>
               <component id="e5f21" class="javax.swing.JLabel" binding="lbl_selected_book_id">
                 <constraints>
-                  <grid row="5" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="6" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <text value=""/>
+                  <visible value="false"/>
+                </properties>
+              </component>
+              <component id="858f4" class="javax.swing.JButton" binding="btn_filter_book_self">
+                <constraints>
+                  <grid row="1" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Mevcut / Hepsi"/>
                 </properties>
               </component>
             </children>
@@ -536,20 +546,13 @@
                       <text value="Düzenle"/>
                     </properties>
                   </component>
-                  <component id="22f28" class="javax.swing.JLabel">
-                    <constraints>
-                      <grid row="7" column="2" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <text value="Id"/>
-                    </properties>
-                  </component>
                   <component id="a7140" class="javax.swing.JLabel" binding="lbl_author_id">
                     <constraints>
                       <grid row="8" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <text value=""/>
+                      <visible value="false"/>
                     </properties>
                   </component>
                   <vspacer id="9e098">
@@ -653,6 +656,7 @@
                     </constraints>
                     <properties>
                       <text value=""/>
+                      <visible value="false"/>
                     </properties>
                   </component>
                   <component id="d587b" class="javax.swing.JLabel">
@@ -713,20 +717,13 @@
                   <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
               </hspacer>
-              <component id="12db8" class="javax.swing.JLabel">
-                <constraints>
-                  <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <text value="Id"/>
-                </properties>
-              </component>
               <component id="e8902" class="javax.swing.JLabel" binding="lbl_selected_favorite_book">
                 <constraints>
                   <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <text value=""/>
+                  <visible value="false"/>
                 </properties>
               </component>
               <vspacer id="f7ea2">
@@ -786,6 +783,7 @@
                   <background color="-12828863"/>
                   <enabled value="true"/>
                   <text value=""/>
+                  <visible value="false"/>
                 </properties>
               </component>
               <component id="8e29" class="javax.swing.JLabel" binding="lbl_delete_shop_book_id">
@@ -794,7 +792,8 @@
                 </constraints>
                 <properties>
                   <enabled value="true"/>
-                  <text value="Label"/>
+                  <text value=""/>
+                  <visible value="false"/>
                 </properties>
               </component>
             </children>
