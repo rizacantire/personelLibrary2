@@ -109,6 +109,9 @@ public class BookSelfGUI extends JFrame {
     private JTable tbl_shop_list;
     private JButton kitaplığaEkleButton;
     private JLabel lbl_shop_book_id;
+    private JButton btn_add_shop_list;
+    private JButton btn_delete_shop_list;
+    private JLabel lbl_delete_shop_book_id;
     private Object[] col_category;
     private Object[] row_category;
     private DefaultTableModel mdl_category;
@@ -160,24 +163,26 @@ public class BookSelfGUI extends JFrame {
         loadBooks();
 
         //Kütüphane
+
         //Shop List
-        col_shops = new Object[]{"Id", "Sayı", "Yazar", "Kitap Adı", "Sayfa", "Kategori"};
+        col_shops = new Object[]{"Id", "Sayı", "Yazar", "Kitap Adı", "Sayfa", "Kategori","Id"};
         mdl_shops = new DefaultTableModel();
         mdl_shops.setColumnIdentifiers(col_shops);
         row_shops = new Object[col_shops.length];
         tbl_shop_list.setModel(mdl_shops);
         tbl_shop_list.getColumnModel().getColumn(4).setMaxWidth(50);
-
         tbl_shop_list.getColumnModel().getColumn(5).setMaxWidth(200);
         tableColumnAlignment(tbl_shop_list, 1, 4);
 
         hideTableHeader(tbl_shop_list, 0);
+        hideTableHeader(tbl_shop_list, 6);
+        //hideTableHeader(tbl_shop_list,6);
 
 
         Helper.tableEditHeader(tbl_shop_list, 0, 1);
 
 
-        loadShopListBook();
+        loadShopList();
         //Shop List
 
         //Kitaplık
@@ -700,17 +705,70 @@ public class BookSelfGUI extends JFrame {
 
             }
         });
+        btn_add_shop_list.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                var bookId = Integer.parseInt(lbl_book_id.getText());
+                ShopList shopList = new ShopList();
+                Book book = new Book();
+                book.setId(bookId);
+                shopList.setBook(book);
+                var bookSelflist = personelBookService.getAlll();
+                var isExist =bookSelflist.stream().
+                                                                        filter(b->b.getBook().getId()==bookId).
+                                                                        findAny();
+
+
+                if (isExist.isEmpty()){
+                    if (shopListService.add(shopList)){
+                        Helper.showMsg("Kitap eklendi");
+                    }else {
+                        Helper.showMsg("Daha önce alınacaklara eklendi");
+                    }
+                }else {
+                    Helper.showMsg("Kitap mevcut");
+                }
+
+                loadShopList();
+            }
+        });
+        tbl_shop_list.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                var shopBookId = tbl_shop_list.getValueAt(tbl_shop_list.getSelectedRow(),6).toString();
+                var deleteShopBookId = tbl_shop_list.getValueAt(tbl_shop_list.getSelectedRow(),0).toString();
+                lbl_shop_book_id.setText(shopBookId);
+                lbl_delete_shop_book_id.setText(deleteShopBookId);
+            }
+        });
+        btn_delete_shop_list.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                var deleteShopBookId = Integer.parseInt(lbl_delete_shop_book_id.getText());
+                shopListService.deleteById(deleteShopBookId);
+                loadShopList();
+            }
+        });
     }
 
-    private void loadShopListBook() {
-        var shopList = shopListService.getAlll();
-        var books = shopList.get(0).getBooks();
-        List<Book> b1 = new ArrayList<>();
-
-        for (var s : shopList){
-            b1 = s.getBooks();
+    private void loadShopList(){
+        clearTable(tbl_shop_list);
+        shopLists = shopListService.getAlll();
+        int count = 1;
+        for (var book : shopLists) {
+            int i = 0;
+            row_shops[i++] = book.getId();
+            row_shops[i++] = count++;
+            var authors = book.getBook().getAuthors();
+            for (var a : authors) {
+                row_shops[i++] = a.getFirstName() + " " + a.getLastName();
+            }
+            row_shops[i++] = book.getBook().getName();
+            row_shops[i++] = book.getBook().getPage();
+            row_shops[i++] = book.getBook().getCategories().get(0).getName();
+            row_shops[i++] = book.getBook().getId();
+            mdl_shops.addRow(row_shops);
         }
-        loadSampleTable(tbl_shop_list,row_shops,mdl_shops,b1);
     }
 
 
@@ -749,6 +807,7 @@ public class BookSelfGUI extends JFrame {
             row_books[i++] = book.getCategories().get(0).getName();
             mdl_books.addRow(row_books);
         }
+
 
 
     }

@@ -2,6 +2,7 @@ package com.rza.BookSelf.business.concretes;
 
 import com.rza.BookSelf.business.abstracts.ShopListService;
 import com.rza.BookSelf.dataAccess.ShopListDao;
+import com.rza.BookSelf.entities.concretes.Book;
 import com.rza.BookSelf.entities.concretes.ShopList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,8 +25,16 @@ public class ShopListManager implements ShopListService {
 
     @Override
     public boolean add(ShopList entity) {
-        this.shopListDao.save(entity);
-        return true;
+        var result = this.shopListDao.findByBook(entity.getBook());
+        if (result==null){
+            this.shopListDao.save(entity);
+            System.out.println("eklendi");
+            return true;
+        }else{
+            System.out.println("var");
+            return false;
+        }
+
     }
 
     @Override
@@ -43,5 +52,10 @@ public class ShopListManager implements ShopListService {
     public boolean deleteById(int id) {
         this.shopListDao.deleteById(id);
         return true;
+    }
+
+    @Override
+    public ShopList getByBook(Book book) {
+        return this.shopListDao.findByBook(book);
     }
 }

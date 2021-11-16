@@ -19,7 +19,8 @@ public class ShopList {
     @SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
     private int id;
 
-    @OneToMany
-    private List<Book> books;
+    @OneToOne
+    @JoinColumn(name = "book_id")
+    private Book book;
 
 }

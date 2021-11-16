@@ -2,6 +2,7 @@ package com.rza.BookSelf.business.concretes;
 
 import com.rza.BookSelf.business.abstracts.PersonelBookService;
 import com.rza.BookSelf.dataAccess.PersonelBookDao;
+import com.rza.BookSelf.entities.concretes.Book;
 import com.rza.BookSelf.entities.concretes.PersonelBook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,4 +57,11 @@ public class PersonelBookManager implements PersonelBookService {
     public PersonelBook getByBookId(int id) {
         return this.personelBookDao.getPersonelBookByBook_Id(id);
     }
+
+    @Override
+    public Book getBookByBookId(int bookId) {
+        return this.personelBookDao.findPersonelBookByBook_Id(bookId);
+    }
+
+
 }

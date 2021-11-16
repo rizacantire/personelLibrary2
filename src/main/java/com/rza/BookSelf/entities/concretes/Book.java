@@ -33,7 +33,7 @@ public class Book {
     @OneToMany
     private List<PersonelBook> personelBooks;
 
-    @ManyToOne
+    @OneToOne
     private ShopList shopList;
 
 }
